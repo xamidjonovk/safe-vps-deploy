@@ -1,0 +1,9 @@
+{
+  "name": "safe-vps-deploy",
+  "description": "Securely deploy a docker-compose project (FastAPI, Next.js, Postgres, Redis, Celery, MinIO) from GitHub to a shared VPS with nginx, Let's Encrypt HTTPS and GitHub Actions - without the root password and without exposing secrets",
+  "version": "1.0.0",
+  "author": {
+    "name": "Komiljon"
+  },
+  "keywords": ["deploy", "vps", "docker", "nginx", "https", "ci-cd", "security"]
+}

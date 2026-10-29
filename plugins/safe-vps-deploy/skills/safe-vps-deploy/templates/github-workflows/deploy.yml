@@ -1,0 +1,52 @@
+# .github/workflows/deploy.yml — push to main => deploy on the VPS through sdp.
+# The SSH key stored in SDP_SSH_KEY can ONLY run `sdp deploy` for this project
+# (forced command on the server). It cannot open a shell, read files or touch other projects.
+#
+# Repository secrets (created by the setup agent with `gh secret set`):
+#   SDP_SSH_KEY      private deploy-only key      (ssh <server> sudo sdp ci-key | gh secret set SDP_SSH_KEY)
+#   SDP_KNOWN_HOSTS  server host keys             (ssh <server> sudo sdp host-keys | gh secret set SDP_KNOWN_HOSTS)
+#   SDP_HOST         server IP
+#   SDP_USER         sdp-<project>
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  # Optional: uncomment and adapt, then add `needs: test` to the deploy job.
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-python@v5
+  #       with: { python-version: "3.12" }
+  #     - run: pip install -r backend/requirements.txt pytest && pytest -q backend
+
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Deploy on the VPS (build, health-check, auto-rollback)
+        env:
+          SDP_SSH_KEY: ${{ secrets.SDP_SSH_KEY }}
+          SDP_KNOWN_HOSTS: ${{ secrets.SDP_KNOWN_HOSTS }}
+          SDP_HOST: ${{ secrets.SDP_HOST }}
+          SDP_USER: ${{ secrets.SDP_USER }}
+        run: |
+          set -euo pipefail
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SDP_SSH_KEY" > ~/.ssh/sdp_deploy
+          chmod 600 ~/.ssh/sdp_deploy
+          printf '%s\n' "$SDP_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh -i ~/.ssh/sdp_deploy \
+              -o BatchMode=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 \
+              "$SDP_USER@$SDP_HOST" "deploy $GITHUB_SHA"

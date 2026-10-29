@@ -1,0 +1,18 @@
+#!/bin/sh
+# sdp-ci-entry — forced command for CI deploy keys (authorized_keys: restrict,command="...").
+# The key can only trigger a deploy of its own project (optionally of an exact commit) or read status.
+set -eu
+cmd="${SSH_ORIGINAL_COMMAND:-deploy}"
+case "$cmd" in
+  deploy)
+    exec sudo -n /usr/local/sbin/sdp deploy ;;
+  "deploy "*)
+    sha="${cmd#deploy }"
+    if printf '%s' "$sha" | grep -Eq '^[0-9a-f]{40}$'; then
+      exec sudo -n /usr/local/sbin/sdp deploy --sha "$sha"
+    fi ;;
+  status)
+    exec sudo -n /usr/local/sbin/sdp status ;;
+esac
+echo "sdp-ci: command not allowed (only: deploy [<40-char sha>] | status)" >&2
+exit 1

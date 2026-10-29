@@ -1,0 +1,6 @@
+#!/usr/bin/python3 -I
+# sdp — Safe Deploy Proxy. Agents run it as: sudo sdp <command>   (see: sudo sdp --help)
+import sys
+sys.path.insert(0, "/usr/local/lib/sdp")
+import sdp_core  # noqa: E402
+sys.exit(sdp_core.main_sdp())

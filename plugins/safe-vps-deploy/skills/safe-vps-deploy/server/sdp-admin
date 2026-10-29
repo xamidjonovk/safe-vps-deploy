@@ -1,0 +1,6 @@
+#!/usr/bin/python3 -I
+# sdp-admin — root-only project administration for sdp.   (see: sdp-admin --help)
+import sys
+sys.path.insert(0, "/usr/local/lib/sdp")
+import sdp_core  # noqa: E402
+sys.exit(sdp_core.main_admin())

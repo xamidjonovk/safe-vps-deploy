@@ -1,0 +1,16 @@
+# Copy to backend/.dockerignore and frontend/.dockerignore
+.git
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+.next/
+dist/
+coverage/
+.pytest_cache/
+.mypy_cache/
+*.log

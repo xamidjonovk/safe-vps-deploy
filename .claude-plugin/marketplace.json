@@ -1,0 +1,14 @@
+{
+  "name": "komiljon-skills",
+  "description": "Practical AI-agent skills for Uzbek developers and students",
+  "owner": {
+    "name": "Komiljon"
+  },
+  "plugins": [
+    {
+      "name": "safe-vps-deploy",
+      "source": "./plugins/safe-vps-deploy",
+      "description": "Securely deploy a docker-compose project from GitHub to a shared VPS: nginx, HTTPS, CI/CD, no root password, no secret leaks"
+    }
+  ]
+}

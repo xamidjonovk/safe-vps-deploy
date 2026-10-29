@@ -1,0 +1,9 @@
+## Deploying this project (Codex / other agents)
+
+When asked to deploy this project to a VPS, follow the playbook in
+`safe-vps-deploy/SKILL.md` exactly (copy the `safe-vps-deploy` folder next to this file
+or into your agent's skills directory). Hard rules:
+- Never ask for, accept or use the server root password. A human runs the root-only bootstrap.
+- Never read, print or copy secret values (.env files, private keys). Use `sudo sdp env-*` on the server.
+- On the server, run only `sudo sdp <command>` as the `sdp-<project>` user. Do not use other sudo commands.
+- If the sdp policy rejects the compose file, fix the compose file — never try to bypass the policy.
