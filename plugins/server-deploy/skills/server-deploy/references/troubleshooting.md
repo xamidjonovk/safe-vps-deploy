@@ -2,7 +2,7 @@
 
 | Symptom | Likely cause → fix |
 |---|---|
-| `Permission denied (publickey)` as `sdp-<name>` | the human has not run `sdp-admin add-project`, or the access was revoked (`sdp-admin grant-agent <name> --agent-key '...'`), or wrong `IdentityFile` in `~/.ssh/config` |
+| `Permission denied (publickey)` as `sdp-<name>` | project bootstrap has not completed, or access was revoked (`sdp-admin grant-agent <name> --agent-key '...'`), or wrong `IdentityFile` in `~/.ssh/config` |
 | `sudo: a password is required` | you ran something other than `sudo sdp ...` — only sdp is allowed |
 | `install.sh: ports 80/443 are used by 'docker-proxy'/'caddy'/'apache2'` | another reverse proxy owns the web ports; sdp cannot coexist without the owner reconfiguring the server. Stop and tell the user |
 | `git clone failed` | deploy key not added to the repo, or repo URL wrong (use `git@github.com:owner/repo.git`) |

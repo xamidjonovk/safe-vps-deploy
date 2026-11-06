@@ -1,0 +1,10 @@
+## Server deployment
+
+Use `server-deploy/SKILL.md` when deploying this repository. With user authorization,
+`bootstrap_ssh.py` privately reads SERVER/PAROL from the local environment file and
+creates project-scoped SSH access. Never print credentials or copy the workstation
+.env to the server. Validate/pin host keys; never ignore a changed key. After the
+one-time bootstrap, use only `sudo sdp` as `sdp-<project>`. Preserve other services,
+volumes, nginx sites, firewall rules and SSH settings. Fix policy errors in this
+project's configuration rather than bypassing isolation. Deployment authorization
+covers the necessary project commit/push; ask about genuinely ambiguous targets.

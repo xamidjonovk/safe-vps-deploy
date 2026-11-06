@@ -1,0 +1,4 @@
+interface:
+  display_name: "Server Deploy"
+  short_description: "Bootstrap SSH and deploy safely to a shared VPS"
+  default_prompt: "Use $server-deploy to inspect my VPS, set up isolated SSH access and deploy this Git project."

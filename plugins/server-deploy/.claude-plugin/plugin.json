@@ -1,0 +1,17 @@
+{
+  "name": "server-deploy",
+  "description": "Bootstrap SSH from local SERVER/PAROL and deploy Git projects to shared VPS servers through an isolated broker",
+  "version": "2.0.0",
+  "author": {
+    "name": "Komiljon"
+  },
+  "keywords": [
+    "deploy",
+    "vps",
+    "docker",
+    "nginx",
+    "https",
+    "ci-cd",
+    "security"
+  ]
+}

@@ -12,7 +12,8 @@
       "Bash(cat .env)",
       "Bash(cat ./.env)",
       "Bash(cat .env.local)",
-      "Bash(cat .env.production)"
+      "Bash(cat .env.production)",
+      "Read(~/.ssh/server_deploy_*)"
     ],
     "ask": [
       "Bash(git push*)",

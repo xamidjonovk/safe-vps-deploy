@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # install.sh — installs sdp (Safe Deploy Proxy) on an Ubuntu/Debian VPS.
 #
-# Run ONCE as root (a human runs this, never the AI):
+# Optional full host provisioning as root (separate reviewed operation):
+# Automatic project bootstrap uses bootstrap-tools.sh instead.
 #     bash install.sh          (asks before changing anything)
 #     bash install.sh -y       (non-interactive)
 #

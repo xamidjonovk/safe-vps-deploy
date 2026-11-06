@@ -1,0 +1,24 @@
+name: Validate skill and installers
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv run --with paramiko --with python-dotenv python plugins/server-deploy/skills/server-deploy/scripts/test_bootstrap.py
+      - name: Test PowerShell installer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./tests/install.ps1
+      - name: Test Bash installer
+        if: runner.os == 'Linux'
+        run: bash tests/install.sh
+      - name: Check shell scripts
+        if: runner.os == 'Linux'
+        run: bash -n install.sh && bash -n plugins/server-deploy/skills/server-deploy/server/bootstrap-tools.sh

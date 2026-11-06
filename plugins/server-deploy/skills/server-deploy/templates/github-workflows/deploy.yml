@@ -7,6 +7,7 @@
 #   SDP_KNOWN_HOSTS  server host keys             (ssh <server> sudo sdp host-keys | gh secret set SDP_KNOWN_HOSTS)
 #   SDP_HOST         server IP
 #   SDP_USER         sdp-<project>
+#   SDP_PORT         actual SSH port (defaults to 22)
 name: Deploy
 
 on:
@@ -41,6 +42,7 @@ jobs:
           SDP_KNOWN_HOSTS: ${{ secrets.SDP_KNOWN_HOSTS }}
           SDP_HOST: ${{ secrets.SDP_HOST }}
           SDP_USER: ${{ secrets.SDP_USER }}
+          SDP_PORT: ${{ secrets.SDP_PORT }}
         run: |
           set -euo pipefail
           install -m 700 -d ~/.ssh
@@ -49,4 +51,4 @@ jobs:
           printf '%s\n' "$SDP_KNOWN_HOSTS" > ~/.ssh/known_hosts
           ssh -i ~/.ssh/sdp_deploy \
               -o BatchMode=yes -o StrictHostKeyChecking=yes -o ServerAliveInterval=30 \
-              "$SDP_USER@$SDP_HOST" "deploy $GITHUB_SHA"
+              -p "${SDP_PORT:-22}" "$SDP_USER@$SDP_HOST" "deploy $GITHUB_SHA"
