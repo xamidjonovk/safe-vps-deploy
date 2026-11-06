@@ -1420,6 +1420,9 @@ def cmd_status(p: Project, a):
 
 
 def cmd_preflight(p: Project, a):
+    if have("docker"):
+        inventory = run(["docker", "ps", "--format", "{{.Names}} {{.State}}"], check=False)
+        out("BEGIN_CONTAINER_STATE\n" + inventory.stdout.strip() + "\nEND_CONTAINER_STATE")
     osr = {}
     with contextlib.suppress(OSError):
         with open("/etc/os-release") as f:
@@ -1629,7 +1632,7 @@ def _exec_like(p: Project, a, mode: str):
     c = p.conf()
     if not c.get("allow_exec"):
         die("exec/run is disabled for this project by the server admin (sdp-admin exec <project> on)")
-    cmd = list(a.cmd)
+    cmd = list(a.command)
     if cmd and cmd[0] == "--":
         cmd = cmd[1:]
     if not cmd:
@@ -2001,7 +2004,7 @@ def build_parser() -> argparse.ArgumentParser:
     for name in ("exec", "run"):
         s = sp.add_parser(name, help=f"docker compose {name} in a service (output masked)")
         s.add_argument("service")
-        s.add_argument("cmd", nargs=argparse.REMAINDER)
+        s.add_argument("command", nargs=argparse.REMAINDER)
 
     sp.add_parser("env-status", help="list .env keys (no secret values) and what is missing")
     sp.add_parser("env-template", help="add missing keys from .env.example (secrets left empty)")

@@ -12,6 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
       - run: uv run --with paramiko --with python-dotenv python plugins/server-deploy/skills/server-deploy/scripts/test_bootstrap.py
+      - run: uv run --with pyyaml python plugins/server-deploy/skills/server-deploy/scripts/test_broker.py
       - name: Test PowerShell installer
         if: runner.os == 'Windows'
         shell: pwsh
