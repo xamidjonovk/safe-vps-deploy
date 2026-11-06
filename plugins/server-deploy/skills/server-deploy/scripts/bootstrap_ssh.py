@@ -76,8 +76,15 @@ def connect(host, port, user, known, expected, trust_new, *, password=None, key=
         client.connect(hostname=host, port=port, username=user, password=password,
                        key_filename=str(key) if key else None, look_for_keys=False,
                        allow_agent=False, timeout=15, auth_timeout=15, banner_timeout=15)
-        if expected and fingerprint(client.get_transport().get_remote_server_key()) != expected:
+        remote_key = client.get_transport().get_remote_server_key()
+        if expected and fingerprint(remote_key) != expected:
             raise BootstrapError("Known host does not match requested fingerprint")
+        # Also pin keys accepted from the user/system known_hosts into the dedicated
+        # file printed for subsequent OpenSSH invocations.
+        token = host if port == 22 else f"[{host}]:{port}"
+        client.get_host_keys().add(token, remote_key.get_name(), remote_key)
+        client.save_host_keys(str(known))
+        os.chmod(known, 0o600)
         client.get_transport().set_keepalive(20)
         return client
     except Exception:

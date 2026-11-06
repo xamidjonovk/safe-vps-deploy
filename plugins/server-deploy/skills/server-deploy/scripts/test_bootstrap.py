@@ -65,6 +65,8 @@ class BootstrapTests(unittest.TestCase):
         # Local commands generate keys only; password transport is a Python API call.
         with patch.object(bootstrap.paramiko, "SSHClient") as factory:
             client = factory.return_value
+            client.get_transport.return_value.get_remote_server_key.return_value = paramiko.RSAKey.generate(1024)
+            client.save_host_keys.side_effect = lambda filename: Path(filename).touch()
             with tempfile.TemporaryDirectory() as directory:
                 bootstrap.connect("test", 22, "root", Path(directory)/"known", None, False, password="secret-fixture")
             self.assertEqual(client.connect.call_args.kwargs["password"], "secret-fixture")
