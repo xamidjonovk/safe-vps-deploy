@@ -1223,7 +1223,7 @@ def render_locations(d: dict) -> str:
 
 
 def render_site(p: Project, domain: str, d: dict, with_tls: bool) -> str:
-    v6 = has_ipv6()
+    v6 = has_ipv6() and d.get("ipv6", True)
     max_body = d.get("max_body") or "25m"
     acme = (
         "    location ^~ /.well-known/acme-challenge/ {\n"
@@ -1897,13 +1897,13 @@ def cmd_tls(p: Project, a):
     r = run(base + ["--dry-run"], check=False, timeout=300)
     if r.returncode != 0:
         die("Let's Encrypt dry run failed (no certificate was requested, no rate limit used):\n" +
-            (r.stderr or r.stdout or "").strip()[-3000:] +
+            ((r.stdout or "") + "\n" + (r.stderr or "")).strip()[-3000:] +
             "\nCheck: DNS A record, port 80 open in any firewall (Contabo has none by default; check ufw), "
             "and that nothing else answers on port 80.")
     info("requesting the real certificate ...")
     r = run(base + ["--keep-until-expiring", "--deploy-hook", "systemctl reload nginx"], check=False, timeout=300)
     if r.returncode != 0 or not has_cert(domain):
-        die("certbot failed:\n" + (r.stderr or r.stdout or "").strip()[-3000:])
+        die("certbot failed:\n" + ((r.stdout or "") + "\n" + (r.stderr or "")).strip()[-3000:])
     d["tls"] = True
     with file_lock("nginx"):
         apply_site(p, domain, d)
